@@ -2,9 +2,10 @@
 // any location object which can be used as follow
 // substitution = substitution.x, substitution.y
 class Point {
-    constructor(x, y) {
+    constructor(x, y, userData = null) {
         this.x = x;
         this.y = y;
+        this.userData = userData;
     }
 }
 
@@ -116,6 +117,7 @@ class QuadTree {
     subdivide() {
         const b = this.boundary;
 
+        // assign the bondaries to the new sections of the QuadTree
         this.northeast = new QuadTree(b.subdivide('ne'), this.capacity);
         this.northwest = new QuadTree(b.subdivide('nw'), this.capacity);
         this.southeast = new QuadTree(b.subdivide('se'), this.capacity);
@@ -161,24 +163,26 @@ class QuadTree {
     }
 
     // use p5js to draw the QuadTree and its points
-    show() {
+    show(boundary = false, points = true) {
         stroke(255);
         strokeWeight(1);
         noFill();
-        rect(
-            this.boundary.x - this.boundary.w,
-            this.boundary.y - this.boundary.h,
-            this.boundary.w * 2,
-            this.boundary.h * 2
-        );
+        if (boundary)
+            rect(
+                this.boundary.x - this.boundary.w,
+                this.boundary.y - this.boundary.h,
+                this.boundary.w * 2,
+                this.boundary.h * 2
+            );
         if (this.divided) {
             this.northeast.show();
             this.northwest.show();
             this.southeast.show();
             this.southwest.show();
         }
-        for (let p of this.points) {
-            point(p.x, p.y);
-        }
+        if (points)
+            for (let p of this.points) {
+                point(p.x, p.y);
+            }
     }
 }
